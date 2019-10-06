@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+
+<BorderPane prefHeight="458.0" prefWidth="608.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="application.MainFormController">
+   <bottom>
+      <Button fx:id="startBtn" mnemonicParsing="false" onAction="#onClickedStartButton" text="Button" BorderPane.alignment="CENTER" />
+   </bottom>
+</BorderPane>
