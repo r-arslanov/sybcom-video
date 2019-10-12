@@ -7,18 +7,23 @@ import org.opencv.videoio.VideoWriter;
 
 
 public class Recorder extends Thread{
-	private VideoCapture capture = new VideoCapture(0);
-	//private VideoCapture capture = new VideoCapture("rtsp://192.168.43.147/test.mp4&t=unicast&p=rtsp&ve=H264&w=1280&h=720&ae=PCMU&sr=8000");
+	
+	private VideoCapture capture;
 	
 	private Mat pic = new Mat();
 	private VideoWriter writer;
-	private Boolean inter = false;
 	
 	private String fileName, path;
 	
-	public Recorder(String path, String fileName){
-		this.fileName = fileName;
+	public Recorder(String path, String camera, String url){
+		this.fileName = "1_" + camera;
 		this.path = path;
+		System.out.println(url);
+		if(url == "0") {
+			capture = new VideoCapture(0);
+		}else {
+			capture = new VideoCapture(url);
+		}
 	}
 	
 	@Override
@@ -27,8 +32,7 @@ public class Recorder extends Thread{
 		capture.read(temp);
 		Size rSize = temp.size();
 		writer = new VideoWriter(path + fileName, VideoWriter.fourcc('X', 'V', 'I', 'D'), 30, rSize, true);
-		while(!inter) {
-			inter = Thread.currentThread().isInterrupted();
+		while(capture.isOpened()) {
 			capture.read(pic);
 			writer.write(pic);
 			pic.release();
@@ -42,9 +46,5 @@ public class Recorder extends Thread{
 		}
 		writer.release();
 		capture.release();
-	}
-
-	public void call() {
-		inter = !inter;
 	}
 }

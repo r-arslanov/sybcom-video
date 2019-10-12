@@ -1,33 +1,51 @@
 package application;
 
-import javafx.application.Platform;
+import database.DatabaseHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.image.ImageView;
-import utils.Recorder;
+import javafx.scene.control.TextField;
 
 public class MainFormController {
 	@FXML
-    private Button startBtn;
+    private Button addCameraBtn, queryBtn, initBtn;
 	@FXML
-	private ImageView cappture_view;
+	private TextField txtURL, txtName;
 	
-	private Boolean isActive = false;
+	DatabaseHandler db = new DatabaseHandler("VideoServer.db");
 	
 	@FXML
-	void onClickedStartButton() {
-		Recorder mRecorder = new Recorder("C:\\OpenCV\\", "video_1.avi");
-		Thread tRecorder = new Thread(mRecorder);
-//		writer.open("C:\\OpenCV\\test2.avi", VideoWriter.fourcc('X', 'V', 'I', 'D'), 30, new Size(640, 480), true);
-		if(!this.isActive) {
-			this.isActive = true;
-			tRecorder.setDaemon(true);
-			tRecorder.start();
-			this.startBtn.setText("Stop");
-		}else{
-			this.startBtn.setText("Start");
-			this.isActive = false;
+	void onClickedAddCamera() {
+		if(db.isOpened()) {
+			db.insert(txtName.getText(), 1, txtURL.getText());
+			db.selectAll();
+		}else {
+			System.out.println("Connection is not opened");
 		}
 	}
 	
+	@FXML
+	void onClickedInitDB() {
+		if(!db.isOpened()){
+			db.init();
+		}else {
+			System.out.println("Connection alredy opened");
+		}
+	}
+	@FXML
+	void onClickedQueryBtn() {
+		if(db.isOpened()) {
+			db.selectAll();
+		}else {
+			System.out.println("Connection is not opened");
+		}
+	}
+	
+	@FXML
+	void onClickedStartRecorder() {
+		if(db.isOpened()) {
+			db.startAllRecorders();
+		}else {
+			System.out.println("Connection is not opened");
+		}
+	}
 }
